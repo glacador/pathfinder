@@ -40,8 +40,8 @@ export default function HomePage() {
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
-              Discover Your{' '}
-              <span className="text-gradient">Cognitive Profile</span>
+              What Were You{' '}
+              <span className="text-gradient">Born To Do?</span>
             </h1>
 
             <p className="text-xl text-[var(--label-secondary)] mb-8 max-w-2xl mx-auto">
