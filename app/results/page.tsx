@@ -20,7 +20,6 @@ import {
   CelebrityMatch,
 } from '@/components/results';
 import { PaywallModal } from '@/components/pricing';
-import { CoachingSession } from '@/components/coaching';
 import { matchCareers } from '@/data/careers';
 import { findCelebrityMatches } from '@/data/celebrities';
 import { AptitudeId, APTITUDES } from '@/types/aptitudes';
@@ -40,7 +39,6 @@ function ResultsContent() {
 
   const [resultData, setResultData] = useState<ResultData | null>(null);
   const [showReveal, setShowReveal] = useState(true);
-  const [showCoaching, setShowCoaching] = useState(false);
   const [userTier, setUserTier] = useState<PricingTier>('free');
 
   const { canAccess, showPaywall, paywallState, closePaywall } =
@@ -262,45 +260,7 @@ function ResultsContent() {
           </div>
 
           {/* Premium Features CTAs */}
-          <div className="mt-8 grid md:grid-cols-2 gap-6">
-            {/* AI Coaching */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="glass p-6 rounded-[28px]"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-indigo)] rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">AI Career Coaching</h3>
-                  <p className="text-sm text-[var(--label-secondary)]">
-                    Get personalized guidance
-                  </p>
-                </div>
-              </div>
-              {canAccess('ai_coaching') ? (
-                <Button
-                  className="w-full"
-                  onClick={() => setShowCoaching(true)}
-                  rightIcon={<ChevronRight className="w-4 h-4" />}
-                >
-                  Start Coaching Session
-                </Button>
-              ) : (
-                <Button
-                  variant="secondary"
-                  className="w-full"
-                  onClick={() => showPaywall('ai_coaching')}
-                  leftIcon={<Lock className="w-4 h-4" />}
-                >
-                  Unlock with Premium
-                </Button>
-              )}
-            </motion.div>
-
+          <div className="mt-8 flex justify-center">
             {/* PDF Report */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -351,7 +311,7 @@ function ResultsContent() {
                 Unlock Your Full Potential
               </h2>
               <p className="text-[var(--label-secondary)] mb-6 max-w-md mx-auto">
-                Get your complete 40-page Career Roadmap, AI coaching, and more
+                Get your complete 40-page Career Roadmap and premium features
               </p>
               <Link href="/pricing">
                 <Button
@@ -376,23 +336,6 @@ function ResultsContent() {
         onUpgrade={handleUpgrade}
       />
 
-      {/* Coaching Session */}
-      {showCoaching && resultData && (
-        <CoachingSession
-          userData={{
-            name: 'User',
-            scores: resultData.scores,
-            topCareers: careerMatches.slice(0, 10).map((m) => ({
-              title: m.career.title,
-              matchScore: m.matchScore,
-            })),
-            strengths: topStrengths,
-            weaknesses: weaknesses,
-          }}
-          tier={userTier}
-          onClose={() => setShowCoaching(false)}
-        />
-      )}
     </div>
   );
 }

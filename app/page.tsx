@@ -229,7 +229,7 @@ export default function HomePage() {
                 name: 'Premium',
                 price: '$39.99',
                 popular: true,
-                features: ['AI coaching', 'Resume bullets', 'Interview prep'],
+                features: ['Resume bullets', 'Interview prep', 'Skill gap analysis'],
               },
               {
                 name: 'Professional',
