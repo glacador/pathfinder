@@ -6,8 +6,12 @@
   "regions": ["iad1"],
   "env": {
     "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "STRIPE_SECRET_KEY": "@stripe_secret_key",
-    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret",
-    "NEXT_PUBLIC_STRIPE_KEY": "@next_public_stripe_key"
+    "LEMONSQUEEZY_API_KEY": "@lemonsqueezy_api_key",
+    "LEMONSQUEEZY_STORE_ID": "@lemonsqueezy_store_id",
+    "LEMONSQUEEZY_WEBHOOK_SECRET": "@lemonsqueezy_webhook_secret",
+    "LEMONSQUEEZY_VARIANT_BASIC": "@lemonsqueezy_variant_basic",
+    "LEMONSQUEEZY_VARIANT_PREMIUM": "@lemonsqueezy_variant_premium",
+    "LEMONSQUEEZY_VARIANT_PROFESSIONAL": "@lemonsqueezy_variant_professional",
+    "LEMONSQUEEZY_VARIANT_EXECUTIVE": "@lemonsqueezy_variant_executive"
   }
 }

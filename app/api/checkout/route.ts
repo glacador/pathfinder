@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { PRICING_TIERS } from '@/types/pricing';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-06-20',
-});
+const LEMONSQUEEZY_API_URL = 'https://api.lemonsqueezy.com/v1';
 
 export async function POST(request: Request) {
   try {
@@ -15,35 +12,76 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid tier' }, { status: 400 });
     }
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `PathFinder ${tierData.name}`,
-              description: tierData.tagline,
-            },
-            unit_amount: Math.round(tierData.price * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_URL}/results/${resultId}?upgraded=true&tier=${tier}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/pricing?cancelled=true`,
-      customer_email: email,
-      metadata: {
-        userId,
-        tier,
-        resultId,
+    // Get the variant ID for this tier from environment variables
+    const variantIds: Record<string, string> = {
+      basic: process.env.LEMONSQUEEZY_VARIANT_BASIC || '',
+      premium: process.env.LEMONSQUEEZY_VARIANT_PREMIUM || '',
+      professional: process.env.LEMONSQUEEZY_VARIANT_PROFESSIONAL || '',
+      executive: process.env.LEMONSQUEEZY_VARIANT_EXECUTIVE || '',
+    };
+
+    const variantId = variantIds[tier];
+    if (!variantId) {
+      return NextResponse.json({ error: 'Variant not configured' }, { status: 400 });
+    }
+
+    // Create Lemon Squeezy checkout
+    const response = await fetch(`${LEMONSQUEEZY_API_URL}/checkouts`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': `Bearer ${process.env.LEMONSQUEEZY_API_KEY}`,
       },
+      body: JSON.stringify({
+        data: {
+          type: 'checkouts',
+          attributes: {
+            checkout_data: {
+              email: email,
+              custom: {
+                user_id: userId,
+                result_id: resultId,
+                tier: tier,
+              },
+            },
+            product_options: {
+              redirect_url: `${process.env.NEXT_PUBLIC_URL}/results/${resultId}?upgraded=true&tier=${tier}`,
+            },
+          },
+          relationships: {
+            store: {
+              data: {
+                type: 'stores',
+                id: process.env.LEMONSQUEEZY_STORE_ID,
+              },
+            },
+            variant: {
+              data: {
+                type: 'variants',
+                id: variantId,
+              },
+            },
+          },
+        },
+      }),
     });
 
-    return NextResponse.json({ sessionId: session.id, url: session.url });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Lemon Squeezy error:', data);
+      return NextResponse.json(
+        { error: 'Failed to create checkout' },
+        { status: 500 }
+      );
+    }
+
+    const checkoutUrl = data.data.attributes.url;
+
+    return NextResponse.json({ url: checkoutUrl });
   } catch (error) {
-    console.error('Stripe error:', error);
+    console.error('Checkout error:', error);
     return NextResponse.json(
       { error: 'Failed to create checkout session' },
       { status: 500 }
