@@ -114,7 +114,7 @@ export default function PricingPage({ currentTier, onSelectTier }: PricingPagePr
 
       <div className="text-center mt-8 text-[var(--label-secondary)]">
         <p className="text-sm">
-          30-day money-back guarantee • Secure payment via Stripe
+          30-day money-back guarantee • Secure payment via Lemon Squeezy
         </p>
       </div>
     </div>

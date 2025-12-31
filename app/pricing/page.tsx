@@ -31,11 +31,25 @@ function PricingContent() {
       return;
     }
 
-    // In production, this would create a Stripe checkout session
-    // For now, we'll just show an alert
-    alert(
-      `Checkout for ${tier} tier would be initiated here. In production, this would redirect to Stripe.`
-    );
+    // Create Lemon Squeezy checkout
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tier,
+          userId: 'guest',
+          email: '',
+          resultId: 'new',
+        }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+    }
   };
 
   return (
@@ -194,7 +208,7 @@ function PricingContent() {
               <div className="text-2xl mb-2">🔒</div>
               <h4 className="font-semibold mb-1">Secure Payment</h4>
               <p className="text-sm text-[var(--label-secondary)]">
-                All payments processed securely via Stripe.
+                All payments processed securely via Lemon Squeezy.
               </p>
             </div>
             <div>

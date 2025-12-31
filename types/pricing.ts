@@ -3,7 +3,7 @@ export type PricingTier = 'free' | 'basic' | 'premium' | 'professional' | 'execu
 export interface TierFeatures {
   tier: PricingTier;
   price: number;
-  stripePriceId: string;
+  variantId: string;
   name: string;
   tagline: string;
   features: string[];
@@ -14,7 +14,7 @@ export const PRICING_TIERS: TierFeatures[] = [
   {
     tier: 'free',
     price: 0,
-    stripePriceId: '',
+    variantId: '',
     name: 'Free',
     tagline: 'See your potential',
     features: [
@@ -27,7 +27,7 @@ export const PRICING_TIERS: TierFeatures[] = [
   {
     tier: 'basic',
     price: 19.99,
-    stripePriceId: process.env.STRIPE_PRICE_BASIC || 'price_basic_xxx',
+    variantId: process.env.LEMONSQUEEZY_VARIANT_BASIC || '',
     name: 'Basic Report',
     tagline: 'Understand yourself',
     features: [
@@ -43,7 +43,7 @@ export const PRICING_TIERS: TierFeatures[] = [
   {
     tier: 'premium',
     price: 39.99,
-    stripePriceId: process.env.STRIPE_PRICE_PREMIUM || 'price_premium_xxx',
+    variantId: process.env.LEMONSQUEEZY_VARIANT_PREMIUM || '',
     name: 'Premium',
     tagline: 'Most Popular',
     highlighted: true,
@@ -60,7 +60,7 @@ export const PRICING_TIERS: TierFeatures[] = [
   {
     tier: 'professional',
     price: 79.99,
-    stripePriceId: process.env.STRIPE_PRICE_PROFESSIONAL || 'price_professional_xxx',
+    variantId: process.env.LEMONSQUEEZY_VARIANT_PROFESSIONAL || '',
     name: 'Professional',
     tagline: 'Accelerate your career',
     features: [
@@ -78,7 +78,7 @@ export const PRICING_TIERS: TierFeatures[] = [
   {
     tier: 'executive',
     price: 149.99,
-    stripePriceId: process.env.STRIPE_PRICE_EXECUTIVE || 'price_executive_xxx',
+    variantId: process.env.LEMONSQUEEZY_VARIANT_EXECUTIVE || '',
     name: 'Executive',
     tagline: 'For leaders & teams',
     features: [
